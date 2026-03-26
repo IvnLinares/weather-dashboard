@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { useWeather } from '@/composables/useWeather'
 import { useForecast } from '@/composables/useForecast'
+import { useGeolocation } from '@/composables/useGeolocation'
 import SearchBar from '@/components/SearchBar.vue'
 import WeatherCard from '@/components/WeatherCard.vue'
 import WeatherSkeleton from '@/components/WeatherSkeleton.vue'
@@ -9,13 +11,26 @@ import ForecastSkeleton from '@/components/ForecastSkeleton.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
 import TemperatureChart from '@/components/TemperatureChart.vue'
 
-const { weather, loading: weatherLoading, error: weatherError, fetchByCity } = useWeather()
-const { forecast, loading: forecastLoading, fetchForecastByCity } = useForecast()
+const { weather, loading: weatherLoading, error: weatherError, fetchByCoords: fetchWeatherByCoords, fetchByCity } = useWeather()
+const { forecast, loading: forecastLoading, fetchForecastByCoords, fetchForecastByCity } = useForecast()
+const { loading: geoLoading, error: geoError, locate } = useGeolocation()
 
 function handleSearch(city: string) {
   fetchByCity(city)
   fetchForecastByCity(city)
 }
+
+async function handleLocate() {
+  const pos = await locate()
+  if (pos) {
+    fetchWeatherByCoords(pos.lat, pos.lon)
+    fetchForecastByCoords(pos.lat, pos.lon)
+  }
+}
+
+onMounted(() => {
+  handleLocate()
+})
 </script>
 
 <template>
@@ -35,6 +50,22 @@ function handleSearch(city: string) {
 
       <!-- Búsqueda -->
       <SearchBar @search="handleSearch" />
+
+      <!-- Botón geolocalización -->
+      <div class="flex flex-col items-center gap-2">
+        <button
+          @click="handleLocate"
+          :disabled="geoLoading"
+          class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
+                 bg-sky-500 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed
+                 text-white transition-colors"
+          aria-label="Usar mi ubicación actual"
+        >
+          <span v-if="geoLoading">⏳ Obteniendo ubicación…</span>
+          <span v-else>📍 Usar mi ubicación</span>
+        </button>
+        <ErrorMessage v-if="geoError" :message="geoError" />
+      </div>
 
       <!-- Clima actual -->
       <WeatherSkeleton v-if="weatherLoading" />
