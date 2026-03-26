@@ -1,0 +1,93 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { Line } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from 'chart.js'
+import type { ForecastDay } from '@/types/weather'
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
+
+const props = defineProps<{ days: ForecastDay[] }>()
+
+// Flatten all items from all days, take next 8 (≈ 24h)
+const next24hItems = computed(() =>
+  props.days
+    .flatMap((d) => d.items)
+    .slice(0, 8),
+)
+
+const labels = computed(() =>
+  next24hItems.value.map((item) => {
+    const d = new Date(item.dt * 1000)
+    return d.toLocaleTimeString('es-SV', { hour: '2-digit', minute: '2-digit', hour12: false })
+  }),
+)
+
+const temps = computed(() => next24hItems.value.map((item) => item.temp))
+
+const chartData = computed(() => ({
+  labels: labels.value,
+  datasets: [
+    {
+      label: 'Temperatura (°C)',
+      data: temps.value,
+      borderColor: '#38bdf8',
+      backgroundColor: 'rgba(56,189,248,0.15)',
+      pointBackgroundColor: '#0ea5e9',
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      borderWidth: 2,
+      tension: 0.4,
+      fill: true,
+    },
+  ],
+}))
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: false },
+    title: { display: false },
+    tooltip: {
+      callbacks: {
+        label: (ctx: { parsed: { y: number | null } }) => ` ${ctx.parsed.y ?? ''}°C`,
+      },
+    },
+  },
+  scales: {
+    x: {
+      ticks: { color: '#94a3b8', font: { size: 11 } },
+      grid: { color: 'rgba(148,163,184,0.1)' },
+    },
+    y: {
+      ticks: {
+        color: '#94a3b8',
+        font: { size: 11 },
+        callback: (value: number | string) => `${value}°`,
+      },
+      grid: { color: 'rgba(148,163,184,0.1)' },
+    },
+  },
+}
+</script>
+
+<template>
+  <div class="w-full bg-white dark:bg-gray-800 rounded-2xl shadow p-5">
+    <h2 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
+      🌡️ Temperatura próximas 24h
+    </h2>
+    <div class="h-48">
+      <Line :data="chartData" :options="chartOptions" />
+    </div>
+  </div>
+</template>
