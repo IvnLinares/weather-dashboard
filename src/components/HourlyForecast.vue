@@ -31,7 +31,7 @@ function formatTime(dt: number): string {
       <div
         v-for="item in items"
         :key="item.dt"
-        class="flex flex-col items-center gap-1 min-w-[64px] glass-subtle
+        class="flex flex-col items-center gap-1 flex-1 min-w-[64px] glass-subtle
                rounded-2xl px-2 py-3 text-center hover:bg-white/30 dark:hover:bg-white/[0.08]
                transition-all duration-200"
       >
