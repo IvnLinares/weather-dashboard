@@ -6,6 +6,7 @@ import { useSettingsStore } from '@/stores/settings'
 import { useGeolocation } from '@/composables/useGeolocation'
 import SearchBar from '@/components/SearchBar.vue'
 import WeatherCard from '@/components/WeatherCard.vue'
+import WeatherDetails from '@/components/WeatherDetails.vue'
 import WeatherSkeleton from '@/components/WeatherSkeleton.vue'
 import ForecastList from '@/components/ForecastList.vue'
 import ForecastSkeleton from '@/components/ForecastSkeleton.vue'
@@ -37,103 +38,95 @@ onMounted(() => handleLocate())
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-safe flex flex-col items-center gap-5 sm:gap-6">
+  <div class="max-w-xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-safe flex flex-col gap-8">
 
-    <!-- Header -->
-    <div class="w-full flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl sm:text-4xl font-bold tracking-tight">
-          Weather
-        </h1>
-        <p class="text-gray-500/80 dark:text-gray-400/60 mt-0.5 text-xs sm:text-sm font-medium hidden sm:block">
-          Consulta el clima en tiempo real
-        </p>
-      </div>
-      <div class="flex items-center gap-2">
-        <!-- °C / °F toggle -->
+    <!-- Top bar -->
+    <div class="flex items-center justify-between">
+      <SearchBar @search="handleSearch" class="flex-1 mr-3" />
+      <div class="flex items-center gap-1.5 shrink-0">
         <button
           @click="settings.toggleUnit()"
-          class="glass-btn px-3 py-1.5 rounded-full
-                 text-sm font-semibold"
+          class="glass-btn px-2.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold"
           :aria-label="`Cambiar a ${settings.unit === 'metric' ? 'Fahrenheit' : 'Celsius'}`"
         >
           {{ settings.unitSymbol() }}
         </button>
-        <!-- Dark mode toggle -->
         <button
           @click="settings.toggleDark()"
-          class="glass-btn p-2.5 rounded-full leading-none flex items-center justify-center"
+          class="glass-btn p-2 rounded-full leading-none flex items-center justify-center"
           :aria-label="settings.isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
         >
-          <Sun v-if="settings.isDark" :size="18" class="text-amber-400" />
-          <Moon v-else :size="18" class="text-indigo-400" />
+          <Sun v-if="settings.isDark" :size="16" class="text-amber-400" />
+          <Moon v-else :size="16" class="text-indigo-400" />
         </button>
       </div>
     </div>
 
-    <!-- Búsqueda -->
-    <SearchBar @search="handleSearch" />
-
-    <!-- Favoritos -->
-    <div v-if="settings.favorites.length" class="w-full max-w-lg">
-      <p class="text-xs text-gray-400/80 dark:text-gray-500/60 mb-2 font-semibold uppercase tracking-wider">
-        Favoritos
-      </p>
-      <div class="flex flex-wrap gap-2">
+    <!-- Favorites + Geo -->
+    <div v-if="settings.favorites.length || !store.weather" class="flex flex-col gap-4 -mt-4">
+      <div v-if="settings.favorites.length" class="flex flex-wrap gap-2">
         <button
           v-for="city in settings.favorites"
           :key="city"
           @click="handleSearch(city)"
-          class="glass-btn px-3.5 py-1.5 text-sm rounded-full font-medium flex items-center gap-1.5"
+          class="glass-btn px-3 py-1.5 text-xs sm:text-sm rounded-full font-medium flex items-center gap-1.5"
         >
-          <Star :size="14" class="fill-amber-400 text-amber-400" /> {{ city }}
+          <Star :size="12" class="fill-amber-400 text-amber-400" /> {{ city }}
         </button>
+      </div>
+      <div v-if="!store.weather && !store.weatherLoading" class="flex flex-col items-center gap-3">
+        <button
+          @click="handleLocate"
+          :disabled="geoLoading"
+          class="glass-btn-primary flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold
+                 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span v-if="geoLoading" class="flex items-center gap-2"><Loader :size="16" class="animate-spin" /> Obteniendo ubicación…</span>
+          <span v-else class="flex items-center gap-2"><MapPin :size="16" /> Usar mi ubicación</span>
+        </button>
+        <ErrorMessage v-if="geoError" :message="geoError" />
       </div>
     </div>
 
-    <!-- Botón geolocalización -->
-    <div class="flex flex-col items-center gap-2">
-      <button
-        @click="handleLocate"
-        :disabled="geoLoading"
-        class="glass-btn-primary flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold
-               disabled:opacity-50 disabled:cursor-not-allowed"
-        aria-label="Usar mi ubicación actual"
-      >
-        <span v-if="geoLoading" class="flex items-center gap-2"><Loader :size="16" class="animate-spin" /> Obteniendo ubicación…</span>
-        <span v-else class="flex items-center gap-2"><MapPin :size="16" /> Usar mi ubicación</span>
-      </button>
-      <ErrorMessage v-if="geoError" :message="geoError" />
-    </div>
-
-    <!-- Clima actual -->
+    <!-- Loading / Error -->
     <WeatherSkeleton v-if="store.weatherLoading" />
-    <ErrorMessage v-else-if="store.weatherError" :message="store.weatherError" />
-    <WeatherCard v-else-if="store.weather" :weather="store.weather" />
+    <ErrorMessage v-if="store.weatherError" :message="store.weatherError" />
 
-    <!-- Frase salvadoreña -->
-    <WeatherPhrase v-if="store.weather" :condition="store.weather.conditionMain" :temp="store.weather.temp" />
+    <!-- ═══ HERO SECTION ═══ -->
+    <template v-if="store.weather">
+      <div class="flex flex-col items-center gap-6 -mt-2">
+        <!-- Salvadoran phrase -->
+        <WeatherPhrase :condition="store.weather.conditionMain" :temp="store.weather.temp" />
+        <!-- Current weather hero -->
+        <WeatherCard :weather="store.weather" />
+      </div>
 
-    <!-- AQI -->
-    <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
+      <!-- ═══ CONDITIONS ═══ -->
+      <div class="flex flex-col gap-3">
+        <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
+        <WeatherDetails :weather="store.weather" />
+      </div>
+    </template>
 
-    <!-- Vista horaria 24h -->
-    <HourlyForecast v-if="store.forecast.length && !store.forecastLoading" :days="store.forecast" />
+    <!-- ═══ FORECAST ═══ -->
+    <template v-if="store.forecast.length && !store.forecastLoading">
+      <div class="flex flex-col gap-3">
+        <HourlyForecast :days="store.forecast" />
+        <ForecastList :days="store.forecast" />
+      </div>
 
-    <!-- Pronóstico 5 días -->
+      <!-- Chart -->
+      <TemperatureChart :days="store.forecast" />
+    </template>
     <ForecastSkeleton v-if="store.forecastLoading" />
-    <ForecastList v-else-if="store.forecast.length" :days="store.forecast" />
 
-    <!-- Gráfico temperatura 24h -->
-    <TemperatureChart v-if="store.forecast.length && !store.forecastLoading" :days="store.forecast" />
-
-    <!-- Pantalla vacía -->
+    <!-- Empty state -->
     <div
       v-if="!store.weatherLoading && !store.weather && !store.weatherError && !geoLoading"
-      class="text-center text-gray-400/60 dark:text-gray-600/60 mt-4"
+      class="text-center text-gray-400/60 dark:text-gray-600/60 mt-8"
     >
-      <Search :size="40" class="mx-auto mb-3 text-gray-300 dark:text-gray-600" />
-      <p class="text-sm font-medium">Escribe el nombre de una ciudad o usa tu ubicación</p>
+      <Search :size="48" class="mx-auto mb-4 text-gray-300 dark:text-gray-600" />
+      <p class="text-base font-medium">Buscá una ciudad o usá tu ubicación</p>
     </div>
 
   </div>

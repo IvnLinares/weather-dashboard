@@ -5,6 +5,7 @@ import { useWeatherStore } from '@/stores/weather'
 import { useSettingsStore } from '@/stores/settings'
 import SearchBar from '@/components/SearchBar.vue'
 import WeatherCard from '@/components/WeatherCard.vue'
+import WeatherDetails from '@/components/WeatherDetails.vue'
 import WeatherSkeleton from '@/components/WeatherSkeleton.vue'
 import ForecastList from '@/components/ForecastList.vue'
 import ForecastSkeleton from '@/components/ForecastSkeleton.vue'
@@ -32,63 +33,63 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-safe flex flex-col items-center gap-5 sm:gap-6">
+  <div class="max-w-xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-safe flex flex-col gap-8">
 
-    <!-- Header -->
-    <div class="w-full flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <button
-          @click="router.push('/')"
-          class="glass-btn px-3.5 py-1.5 rounded-full text-sm font-medium flex items-center gap-1"
-          aria-label="Volver al inicio"
-        >
-          <ChevronLeft :size="16" /> Inicio
-        </button>
-        <h1 class="text-xl sm:text-3xl font-bold tracking-tight">
-          Weather
-        </h1>
-      </div>
-      <div class="flex items-center gap-2">
+    <!-- Top bar -->
+    <div class="flex items-center justify-between gap-3">
+      <button
+        @click="router.push('/')"
+        class="glass-btn p-2 rounded-full leading-none flex items-center justify-center shrink-0"
+        aria-label="Volver al inicio"
+      >
+        <ChevronLeft :size="18" />
+      </button>
+      <SearchBar @search="handleSearch" class="flex-1" />
+      <div class="flex items-center gap-1.5 shrink-0">
         <button
           @click="settings.toggleUnit()"
-          class="glass-btn px-3 py-1.5 rounded-full
-                 text-sm font-semibold"
+          class="glass-btn px-2.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold"
         >
           {{ settings.unitSymbol() }}
         </button>
         <button
           @click="settings.toggleDark()"
-          class="glass-btn p-2.5 rounded-full leading-none flex items-center justify-center"
+          class="glass-btn p-2 rounded-full leading-none flex items-center justify-center"
         >
-          <Sun v-if="settings.isDark" :size="18" class="text-amber-400" />
-          <Moon v-else :size="18" class="text-indigo-400" />
+          <Sun v-if="settings.isDark" :size="16" class="text-amber-400" />
+          <Moon v-else :size="16" class="text-indigo-400" />
         </button>
       </div>
     </div>
 
-    <!-- Búsqueda -->
-    <SearchBar @search="handleSearch" />
-
-    <!-- Clima actual -->
+    <!-- Loading / Error -->
     <WeatherSkeleton v-if="store.weatherLoading" />
-    <ErrorMessage v-else-if="store.weatherError" :message="store.weatherError" />
-    <WeatherCard v-else-if="store.weather" :weather="store.weather" />
+    <ErrorMessage v-if="store.weatherError" :message="store.weatherError" />
 
-    <!-- Frase salvadoreña -->
-    <WeatherPhrase v-if="store.weather" :condition="store.weather.conditionMain" :temp="store.weather.temp" />
+    <!-- ═══ HERO SECTION ═══ -->
+    <template v-if="store.weather">
+      <div class="flex flex-col items-center gap-6 -mt-2">
+        <WeatherPhrase :condition="store.weather.conditionMain" :temp="store.weather.temp" />
+        <WeatherCard :weather="store.weather" />
+      </div>
 
-    <!-- AQI -->
-    <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
+      <!-- ═══ CONDITIONS ═══ -->
+      <div class="flex flex-col gap-3">
+        <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
+        <WeatherDetails :weather="store.weather" />
+      </div>
+    </template>
 
-    <!-- Vista horaria 24h -->
-    <HourlyForecast v-if="store.forecast.length && !store.forecastLoading" :days="store.forecast" />
+    <!-- ═══ FORECAST ═══ -->
+    <template v-if="store.forecast.length && !store.forecastLoading">
+      <div class="flex flex-col gap-3">
+        <HourlyForecast :days="store.forecast" />
+        <ForecastList :days="store.forecast" />
+      </div>
 
-    <!-- Pronóstico 5 días -->
+      <TemperatureChart :days="store.forecast" />
+    </template>
     <ForecastSkeleton v-if="store.forecastLoading" />
-    <ForecastList v-else-if="store.forecast.length" :days="store.forecast" />
-
-    <!-- Gráfico temperatura 24h -->
-    <TemperatureChart v-if="store.forecast.length && !store.forecastLoading" :days="store.forecast" />
 
   </div>
 </template>

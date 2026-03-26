@@ -6,7 +6,7 @@ defineProps<{ days: ForecastDay[] }>()
 </script>
 
 <template>
-  <div class="w-full max-w-lg mx-auto">
+  <div class="w-full">
     <h2 class="text-xs font-semibold text-gray-500/70 dark:text-gray-400/50 uppercase tracking-wider mb-3">
       Pronóstico 5 días
     </h2>

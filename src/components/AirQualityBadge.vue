@@ -6,7 +6,7 @@ defineProps<{ data: AirQualityData }>()
 </script>
 
 <template>
-  <div class="w-full max-w-lg mx-auto glass rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+  <div class="w-full glass rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
     <div class="flex items-center gap-3">
       <Leaf :size="22" class="text-emerald-500 shrink-0" />
       <div>

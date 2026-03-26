@@ -20,20 +20,20 @@ function selectHistory(city: string) {
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 w-full max-w-lg mx-auto">
+  <div class="flex flex-col gap-2 w-full">
     <form class="flex items-center gap-2" @submit.prevent="handleSubmit">
       <input
         v-model="query"
         type="text"
-        placeholder="Buscar ciudad... (ej: San Salvador)"
+        placeholder="Buscar ciudad..."
         aria-label="Buscar ciudad"
-        class="flex-1 px-4 py-2.5 rounded-2xl glass-input
+        class="flex-1 px-4 py-2 rounded-full glass-input
                text-gray-900 dark:text-gray-100 text-sm"
       />
       <button
         type="submit"
         aria-label="Buscar"
-        class="glass-btn-primary px-5 py-2.5 font-semibold rounded-2xl text-sm"
+        class="glass-btn-primary px-4 py-2 font-semibold rounded-full text-sm"
       >
         Buscar
       </button>
@@ -50,7 +50,7 @@ function selectHistory(city: string) {
                hover:bg-white/40 dark:hover:bg-white/[0.1]
                transition-all duration-200 flex items-center gap-1"
       >
-        <Clock :size="12" /> {{ city }}
+        <Clock :size="10" /> {{ city }}
       </button>
     </div>
   </div>
