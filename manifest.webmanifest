@@ -1,0 +1,1 @@
+{"name":"Weather Dashboard","short_name":"Weather","description":"Consulta el clima de cualquier ciudad en tiempo real","start_url":"/weather-dashboard/","display":"standalone","background_color":"#0f172a","theme_color":"#0ea5e9","lang":"en","scope":"/weather-dashboard/","icons":[{"src":"pwa-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
