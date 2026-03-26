@@ -2,10 +2,12 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export type TempUnit = 'metric' | 'imperial'
+export type BgStyle = 'gradient' | 'solid'
 
 export const useSettingsStore = defineStore('settings', () => {
   const isDark = ref(false)
   const unit = ref<TempUnit>('metric')
+  const bgStyle = ref<BgStyle>('gradient')
   const history = ref<string[]>([])
   const favorites = ref<string[]>([])
 
@@ -18,6 +20,11 @@ export const useSettingsStore = defineStore('settings', () => {
   function toggleUnit() {
     unit.value = unit.value === 'metric' ? 'imperial' : 'metric'
     localStorage.setItem('wdash_unit', unit.value)
+  }
+
+  function toggleBgStyle() {
+    bgStyle.value = bgStyle.value === 'gradient' ? 'solid' : 'gradient'
+    localStorage.setItem('wdash_bg', bgStyle.value)
   }
 
   function unitSymbol(): string {
@@ -62,6 +69,9 @@ export const useSettingsStore = defineStore('settings', () => {
     const savedUnit = localStorage.getItem('wdash_unit') as TempUnit | null
     if (savedUnit) unit.value = savedUnit
 
+    const savedBg = localStorage.getItem('wdash_bg') as BgStyle | null
+    if (savedBg) bgStyle.value = savedBg
+
     try {
       const savedHistory = localStorage.getItem('wdash_history')
       if (savedHistory) history.value = JSON.parse(savedHistory)
@@ -73,5 +83,5 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   }
 
-  return { isDark, unit, history, favorites, toggleDark, toggleUnit, unitSymbol, toDisplay, addToHistory, toggleFavorite, isFavorite, init }
+  return { isDark, unit, bgStyle, history, favorites, toggleDark, toggleUnit, toggleBgStyle, unitSymbol, toDisplay, addToHistory, toggleFavorite, isFavorite, init }
 })

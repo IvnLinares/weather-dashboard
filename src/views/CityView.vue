@@ -14,7 +14,7 @@ import TemperatureChart from '@/components/TemperatureChart.vue'
 import AirQualityBadge from '@/components/AirQualityBadge.vue'
 import HourlyForecast from '@/components/HourlyForecast.vue'
 import WeatherPhrase from '@/components/WeatherPhrase.vue'
-import { Sun, Moon, ChevronLeft } from 'lucide-vue-next'
+import { ChevronLeft } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
@@ -35,8 +35,8 @@ onMounted(() => {
 <template>
   <div class="max-w-xl lg:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-safe flex flex-col gap-8">
 
-    <!-- Top bar -->
-    <div class="flex items-center justify-between gap-3">
+    <!-- Top bar: back + search -->
+    <div class="flex items-center gap-2">
       <button
         @click="router.push('/')"
         class="glass-btn p-2 rounded-full leading-none flex items-center justify-center shrink-0"
@@ -44,22 +44,7 @@ onMounted(() => {
       >
         <ChevronLeft :size="18" />
       </button>
-      <SearchBar @search="handleSearch" class="flex-1" />
-      <div class="flex items-center gap-1.5 shrink-0">
-        <button
-          @click="settings.toggleUnit()"
-          class="glass-btn px-2.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold"
-        >
-          {{ settings.unitSymbol() }}
-        </button>
-        <button
-          @click="settings.toggleDark()"
-          class="glass-btn p-2 rounded-full leading-none flex items-center justify-center"
-        >
-          <Sun v-if="settings.isDark" :size="16" class="text-amber-400" />
-          <Moon v-else :size="16" class="text-indigo-400" />
-        </button>
-      </div>
+      <SearchBar @search="handleSearch" class="flex-1 min-w-0" />
     </div>
 
     <!-- Loading / Error -->

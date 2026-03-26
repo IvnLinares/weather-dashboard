@@ -15,7 +15,7 @@ import TemperatureChart from '@/components/TemperatureChart.vue'
 import AirQualityBadge from '@/components/AirQualityBadge.vue'
 import HourlyForecast from '@/components/HourlyForecast.vue'
 import WeatherPhrase from '@/components/WeatherPhrase.vue'
-import { Sun, Moon, Star, Loader, MapPin, Search } from 'lucide-vue-next'
+import { Star, Loader, MapPin, Search } from 'lucide-vue-next'
 
 const store = useWeatherStore()
 const settings = useSettingsStore()
@@ -40,26 +40,9 @@ onMounted(() => handleLocate())
 <template>
   <div class="max-w-xl lg:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-safe flex flex-col gap-8">
 
-    <!-- Top bar -->
-    <div class="flex items-center justify-between">
-      <SearchBar @search="handleSearch" class="flex-1 mr-3" />
-      <div class="flex items-center gap-1.5 shrink-0">
-        <button
-          @click="settings.toggleUnit()"
-          class="glass-btn px-2.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold"
-          :aria-label="`Cambiar a ${settings.unit === 'metric' ? 'Fahrenheit' : 'Celsius'}`"
-        >
-          {{ settings.unitSymbol() }}
-        </button>
-        <button
-          @click="settings.toggleDark()"
-          class="glass-btn p-2 rounded-full leading-none flex items-center justify-center"
-          :aria-label="settings.isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
-        >
-          <Sun v-if="settings.isDark" :size="16" class="text-amber-400" />
-          <Moon v-else :size="16" class="text-indigo-400" />
-        </button>
-      </div>
+    <!-- Top bar: search only -->
+    <div class="flex items-center gap-2">
+      <SearchBar @search="handleSearch" class="flex-1 min-w-0" />
     </div>
 
     <!-- Favorites + Geo -->

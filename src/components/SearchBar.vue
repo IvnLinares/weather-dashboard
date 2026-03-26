@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
-import { Clock } from 'lucide-vue-next'
+import { Clock, Search } from 'lucide-vue-next'
 
 const emit = defineEmits<{ search: [city: string] }>()
 const settings = useSettingsStore()
@@ -33,9 +33,10 @@ function selectHistory(city: string) {
       <button
         type="submit"
         aria-label="Buscar"
-        class="glass-btn-primary px-4 py-2 font-semibold rounded-full text-sm"
+        class="glass-btn-primary p-2 sm:px-4 sm:py-2 rounded-full flex items-center justify-center gap-1.5 font-semibold text-sm shrink-0"
       >
-        Buscar
+        <Search :size="16" />
+        <span class="hidden sm:inline">Buscar</span>
       </button>
     </form>
 
