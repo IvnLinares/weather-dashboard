@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { useWeather } from '@/composables/useWeather'
+import { useForecast } from '@/composables/useForecast'
 import SearchBar from '@/components/SearchBar.vue'
 import WeatherCard from '@/components/WeatherCard.vue'
 import WeatherSkeleton from '@/components/WeatherSkeleton.vue'
+import ForecastList from '@/components/ForecastList.vue'
+import ForecastSkeleton from '@/components/ForecastSkeleton.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
 
-const { weather, loading, error, fetchByCity } = useWeather()
+const { weather, loading: weatherLoading, error: weatherError, fetchByCity } = useWeather()
+const { forecast, loading: forecastLoading, fetchForecastByCity } = useForecast()
+
+function handleSearch(city: string) {
+  fetchByCity(city)
+  fetchForecastByCity(city)
+}
 </script>
 
 <template>
@@ -24,16 +33,20 @@ const { weather, loading, error, fetchByCity } = useWeather()
       </div>
 
       <!-- Búsqueda -->
-      <SearchBar @search="fetchByCity" />
+      <SearchBar @search="handleSearch" />
 
-      <!-- Estados -->
-      <WeatherSkeleton v-if="loading" />
-      <ErrorMessage v-else-if="error" :message="error" />
+      <!-- Clima actual -->
+      <WeatherSkeleton v-if="weatherLoading" />
+      <ErrorMessage v-else-if="weatherError" :message="weatherError" />
       <WeatherCard v-else-if="weather" :weather="weather" />
+
+      <!-- Pronóstico 5 días -->
+      <ForecastSkeleton v-if="forecastLoading" />
+      <ForecastList v-else-if="forecast.length" :days="forecast" />
 
       <!-- Pantalla vacía -->
       <div
-        v-else
+        v-if="!weatherLoading && !weather && !weatherError"
         class="text-center text-gray-400 dark:text-gray-600 mt-4"
       >
         <p class="text-5xl mb-3">🔍</p>
