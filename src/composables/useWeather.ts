@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import type { WeatherData, OWMWeatherResponse, WeatherCondition } from '@/types/weather'
+import { useWeatherCache } from '@/composables/useWeatherCache'
 
 const BASE_URL = 'https://api.openweathermap.org/data/2.5'
 
@@ -34,9 +35,18 @@ export function useWeather() {
   const weather = ref<WeatherData | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const cache = useWeatherCache()
 
   async function fetchByCity(city: string) {
     if (!city.trim()) return
+
+    const cached = cache.get<WeatherData>('weather', city)
+    if (cached) {
+      weather.value = cached
+      error.value = null
+      return
+    }
+
     loading.value = true
     error.value = null
     weather.value = null
@@ -59,6 +69,7 @@ export function useWeather() {
       }
 
       weather.value = mapWeatherResponse(data)
+      cache.set('weather', city, weather.value)
     } catch {
       error.value = 'Sin conexión a internet. Verifica tu red e inténtalo de nuevo.'
     } finally {
@@ -67,6 +78,14 @@ export function useWeather() {
   }
 
   async function fetchByCoords(lat: number, lon: number) {
+    const coordKey = `${lat.toFixed(2)},${lon.toFixed(2)}`
+    const cached = cache.get<WeatherData>('weather', coordKey)
+    if (cached) {
+      weather.value = cached
+      error.value = null
+      return
+    }
+
     loading.value = true
     error.value = null
     weather.value = null
@@ -83,6 +102,7 @@ export function useWeather() {
       }
 
       weather.value = mapWeatherResponse(data)
+      cache.set('weather', coordKey, weather.value)
     } catch {
       error.value = 'Sin conexión a internet. Verifica tu red e inténtalo de nuevo.'
     } finally {

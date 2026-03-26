@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { WeatherData } from '@/types/weather'
+import WeatherAnimation from '@/components/WeatherAnimation.vue'
 
 const { weather } = defineProps<{ weather: WeatherData }>()
 
@@ -31,11 +32,14 @@ function windDirection(deg: number): string {
           {{ weather.description }}
         </p>
       </div>
-      <img
-        :src="`https://openweathermap.org/img/wn/${weather.icon}@2x.png`"
-        :alt="weather.description"
-        class="w-16 h-16 -mt-2"
-      />
+      <div class="flex items-center gap-2 -mt-1">
+        <WeatherAnimation :condition="weather.conditionMain" :condition-id="weather.conditionId" />
+        <img
+          :src="`https://openweathermap.org/img/wn/${weather.icon}@2x.png`"
+          :alt="weather.description"
+          class="w-14 h-14"
+        />
+      </div>
     </div>
 
     <!-- Temperatura principal -->

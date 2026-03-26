@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import type { ForecastDay, ForecastItem, OWMForecastResponse, OWMForecastItem } from '@/types/weather'
+import { useWeatherCache } from '@/composables/useWeatherCache'
 
 const BASE_URL = 'https://api.openweathermap.org/data/2.5'
 
@@ -68,9 +69,18 @@ export function useForecast() {
   const forecast = ref<ForecastDay[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const cache = useWeatherCache()
 
   async function fetchForecastByCity(city: string) {
     if (!city.trim()) return
+
+    const cached = cache.get<ForecastDay[]>('forecast', city)
+    if (cached) {
+      forecast.value = cached
+      error.value = null
+      return
+    }
+
     loading.value = true
     error.value = null
     forecast.value = []
@@ -87,6 +97,7 @@ export function useForecast() {
       }
 
       forecast.value = groupByDay(data.list)
+      cache.set('forecast', city, forecast.value)
     } catch {
       error.value = 'Sin conexión a internet.'
     } finally {
@@ -95,6 +106,14 @@ export function useForecast() {
   }
 
   async function fetchForecastByCoords(lat: number, lon: number) {
+    const coordKey = `${lat.toFixed(2)},${lon.toFixed(2)}`
+    const cached = cache.get<ForecastDay[]>('forecast', coordKey)
+    if (cached) {
+      forecast.value = cached
+      error.value = null
+      return
+    }
+
     loading.value = true
     error.value = null
     forecast.value = []
@@ -111,6 +130,7 @@ export function useForecast() {
       }
 
       forecast.value = groupByDay(data.list)
+      cache.set('forecast', coordKey, forecast.value)
     } catch {
       error.value = 'Sin conexión a internet.'
     } finally {
