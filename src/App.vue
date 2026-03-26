@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useWeather } from '@/composables/useWeather'
 import { useForecast } from '@/composables/useForecast'
 import { useGeolocation } from '@/composables/useGeolocation'
@@ -15,6 +15,14 @@ const { weather, loading: weatherLoading, error: weatherError, fetchByCoords: fe
 const { forecast, loading: forecastLoading, fetchForecastByCoords, fetchForecastByCity } = useForecast()
 const { loading: geoLoading, error: geoError, locate } = useGeolocation()
 
+// Dark mode
+const isDark = ref(false)
+function toggleDark() {
+  isDark.value = !isDark.value
+  document.documentElement.classList.toggle('dark', isDark.value)
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+}
+
 function handleSearch(city: string) {
   fetchByCity(city)
   fetchForecastByCity(city)
@@ -29,23 +37,40 @@ async function handleLocate() {
 }
 
 onMounted(() => {
+  // Restore theme preference
+  const saved = localStorage.getItem('theme')
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  isDark.value = saved ? saved === 'dark' : prefersDark
+  document.documentElement.classList.toggle('dark', isDark.value)
+
   handleLocate()
 })
 </script>
 
 <template>
   <main class="min-h-screen bg-gradient-to-br from-sky-100 to-blue-200 dark:from-gray-900 dark:to-gray-800
-               text-gray-900 dark:text-gray-100">
-    <div class="max-w-2xl mx-auto px-4 py-12 flex flex-col items-center gap-8">
+               text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col items-center gap-8">
 
       <!-- Header -->
-      <div class="text-center">
-        <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-          🌤️ Weather Dashboard
-        </h1>
-        <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">
-          Consulta el clima de cualquier ciudad en tiempo real
-        </p>
+      <div class="w-full flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+            🌤️ Weather Dashboard
+          </h1>
+          <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">
+            Consulta el clima de cualquier ciudad en tiempo real
+          </p>
+        </div>
+        <!-- Dark mode toggle -->
+        <button
+          @click="toggleDark"
+          class="p-2 rounded-full bg-white dark:bg-gray-700 shadow hover:shadow-md transition-all
+                 text-xl leading-none"
+          :aria-label="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+        >
+          {{ isDark ? '☀️' : '🌙' }}
+        </button>
       </div>
 
       <!-- Búsqueda -->
@@ -81,7 +106,7 @@ onMounted(() => {
 
       <!-- Pantalla vacía -->
       <div
-        v-if="!weatherLoading && !weather && !weatherError"
+        v-if="!weatherLoading && !weather && !weatherError && !geoLoading"
         class="text-center text-gray-400 dark:text-gray-600 mt-4"
       >
         <p class="text-5xl mb-3">🔍</p>
