@@ -21,26 +21,26 @@ function windDirection(deg: number): string {
 
 <template>
   <div
-    class="w-full max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6
+    class="w-full max-w-lg mx-auto glass-strong rounded-3xl p-6
            flex flex-col gap-4"
   >
     <!-- Ciudad y país -->
     <div class="flex items-start justify-between">
       <div>
         <div class="flex items-center gap-2">
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+          <h2 class="text-2xl font-bold">
             {{ weather.city }}, {{ weather.country }}
           </h2>
           <!-- Favorito toggle -->
           <button
             @click="settings.toggleFavorite(weather.city)"
             :aria-label="settings.isFavorite(weather.city) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
-            class="text-xl leading-none transition-transform hover:scale-125"
+            class="text-xl leading-none transition-transform hover:scale-125 active:scale-95"
           >
             {{ settings.isFavorite(weather.city) ? '⭐' : '☆' }}
           </button>
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400 capitalize mt-0.5">
+        <p class="text-sm text-gray-600/80 dark:text-gray-300/60 capitalize mt-0.5">
           {{ weather.description }}
         </p>
       </div>
@@ -49,56 +49,56 @@ function windDirection(deg: number): string {
         <img
           :src="`https://openweathermap.org/img/wn/${weather.icon}@2x.png`"
           :alt="weather.description"
-          class="w-14 h-14"
+          class="w-14 h-14 drop-shadow-lg"
         />
       </div>
     </div>
 
     <!-- Temperatura principal -->
     <div class="flex items-end gap-3">
-      <span class="text-6xl font-extrabold text-sky-500">
+      <span class="text-6xl font-extrabold bg-gradient-to-r from-sky-500 to-blue-500 bg-clip-text text-transparent">
         {{ settings.toDisplay(weather.temp) }}{{ settings.unitSymbol() }}
       </span>
-      <div class="text-sm text-gray-500 dark:text-gray-400 pb-2">
-        <p>Sensación: <span class="font-medium">{{ settings.toDisplay(weather.feelsLike) }}{{ settings.unitSymbol() }}</span></p>
+      <div class="text-sm text-gray-600/80 dark:text-gray-300/60 pb-2">
+        <p>Sensación: <span class="font-semibold">{{ settings.toDisplay(weather.feelsLike) }}{{ settings.unitSymbol() }}</span></p>
         <p>Máx {{ settings.toDisplay(weather.tempMax) }}° / Mín {{ settings.toDisplay(weather.tempMin) }}°</p>
       </div>
     </div>
 
     <!-- Detalles -->
-    <div class="grid grid-cols-2 gap-3 border-t border-gray-100 dark:border-gray-700 pt-4">
+    <div class="grid grid-cols-2 gap-3 border-t border-white/20 dark:border-white/[0.06] pt-4">
       <!-- Humedad -->
-      <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+      <div class="flex items-center gap-2.5 text-sm">
         <span class="text-xl">💧</span>
         <div>
-          <p class="text-xs text-gray-400">Humedad</p>
+          <p class="text-xs text-gray-500/70 dark:text-gray-400/50 font-medium">Humedad</p>
           <p class="font-semibold">{{ weather.humidity }}%</p>
         </div>
       </div>
 
       <!-- Viento -->
-      <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+      <div class="flex items-center gap-2.5 text-sm">
         <span class="text-xl">💨</span>
         <div>
-          <p class="text-xs text-gray-400">Viento</p>
+          <p class="text-xs text-gray-500/70 dark:text-gray-400/50 font-medium">Viento</p>
           <p class="font-semibold">{{ weather.windSpeed }} m/s {{ windDirection(weather.windDeg) }}</p>
         </div>
       </div>
 
       <!-- Amanecer -->
-      <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+      <div class="flex items-center gap-2.5 text-sm">
         <span class="text-xl">🌅</span>
         <div>
-          <p class="text-xs text-gray-400">Amanecer</p>
+          <p class="text-xs text-gray-500/70 dark:text-gray-400/50 font-medium">Amanecer</p>
           <p class="font-semibold">{{ formatTime(weather.sunrise) }}</p>
         </div>
       </div>
 
       <!-- Atardecer -->
-      <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+      <div class="flex items-center gap-2.5 text-sm">
         <span class="text-xl">🌇</span>
         <div>
-          <p class="text-xs text-gray-400">Atardecer</p>
+          <p class="text-xs text-gray-500/70 dark:text-gray-400/50 font-medium">Atardecer</p>
           <p class="font-semibold">{{ formatTime(weather.sunset) }}</p>
         </div>
       </div>

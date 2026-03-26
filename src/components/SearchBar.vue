@@ -26,16 +26,13 @@ function selectHistory(city: string) {
         type="text"
         placeholder="Buscar ciudad... (ej: San Salvador)"
         aria-label="Buscar ciudad"
-        class="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600
-               bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
-               placeholder-gray-400 dark:placeholder-gray-500
-               focus:outline-none focus:ring-2 focus:ring-sky-500 transition"
+        class="flex-1 px-4 py-2.5 rounded-2xl glass-input
+               text-gray-900 dark:text-gray-100 text-sm"
       />
       <button
         type="submit"
         aria-label="Buscar"
-        class="px-5 py-2.5 bg-sky-500 hover:bg-sky-600 active:bg-sky-700
-               text-white font-semibold rounded-xl transition"
+        class="glass-btn-primary px-5 py-2.5 font-semibold rounded-2xl text-sm"
       >
         Buscar
       </button>
@@ -47,9 +44,10 @@ function selectHistory(city: string) {
         v-for="city in settings.history"
         :key="city"
         @click="selectHistory(city)"
-        class="px-2.5 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-700
-               text-gray-600 dark:text-gray-300 hover:bg-sky-100 dark:hover:bg-sky-900/40
-               hover:text-sky-600 dark:hover:text-sky-300 transition-colors"
+        class="glass-subtle px-2.5 py-0.5 text-xs rounded-full
+               text-gray-600 dark:text-gray-300
+               hover:bg-white/40 dark:hover:bg-white/[0.1]
+               transition-all duration-200"
       >
         🕐 {{ city }}
       </button>

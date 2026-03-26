@@ -30,33 +30,33 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col items-center gap-8">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col items-center gap-6">
 
     <!-- Header -->
     <div class="w-full flex items-center justify-between">
       <div class="flex items-center gap-3">
         <button
           @click="router.push('/')"
-          class="text-gray-400 hover:text-sky-500 transition-colors"
+          class="glass-btn px-3.5 py-1.5 rounded-full text-sm font-medium"
           aria-label="Volver al inicio"
         >
           ← Inicio
         </button>
-        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-          🌤️ Weather Dashboard
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
+          Weather
         </h1>
       </div>
       <div class="flex items-center gap-2">
         <button
           @click="settings.toggleUnit()"
-          class="px-3 py-1.5 rounded-full bg-white dark:bg-gray-700 shadow hover:shadow-md
-                 text-sm font-semibold transition-all text-gray-700 dark:text-gray-200"
+          class="glass-btn px-3 py-1.5 rounded-full
+                 text-sm font-semibold"
         >
           {{ settings.unitSymbol() }}
         </button>
         <button
           @click="settings.toggleDark()"
-          class="p-2 rounded-full bg-white dark:bg-gray-700 shadow hover:shadow-md transition-all text-xl leading-none"
+          class="glass-btn p-2.5 rounded-full text-xl leading-none"
         >
           {{ settings.isDark ? '☀️' : '🌙' }}
         </button>
