@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { AirQualityData } from '@/types/weather'
+import { Leaf } from 'lucide-vue-next'
 
 defineProps<{ data: AirQualityData }>()
 </script>
@@ -7,7 +8,7 @@ defineProps<{ data: AirQualityData }>()
 <template>
   <div class="w-full max-w-lg mx-auto glass rounded-3xl p-4 flex items-center justify-between gap-4">
     <div class="flex items-center gap-3">
-      <span class="text-2xl">🌿</span>
+      <Leaf :size="22" class="text-emerald-500 shrink-0" />
       <div>
         <p class="text-xs text-gray-500/70 dark:text-gray-400/50 uppercase tracking-wider font-semibold">
           Calidad del aire

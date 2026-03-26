@@ -12,6 +12,7 @@ import ErrorMessage from '@/components/ErrorMessage.vue'
 import TemperatureChart from '@/components/TemperatureChart.vue'
 import AirQualityBadge from '@/components/AirQualityBadge.vue'
 import HourlyForecast from '@/components/HourlyForecast.vue'
+import { Sun, Moon, ChevronLeft } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
@@ -37,10 +38,10 @@ onMounted(() => {
       <div class="flex items-center gap-3">
         <button
           @click="router.push('/')"
-          class="glass-btn px-3.5 py-1.5 rounded-full text-sm font-medium"
+          class="glass-btn px-3.5 py-1.5 rounded-full text-sm font-medium flex items-center gap-1"
           aria-label="Volver al inicio"
         >
-          ← Inicio
+          <ChevronLeft :size="16" /> Inicio
         </button>
         <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
           Weather
@@ -56,9 +57,10 @@ onMounted(() => {
         </button>
         <button
           @click="settings.toggleDark()"
-          class="glass-btn p-2.5 rounded-full text-xl leading-none"
+          class="glass-btn p-2.5 rounded-full leading-none flex items-center justify-center"
         >
-          {{ settings.isDark ? '☀️' : '🌙' }}
+          <Sun v-if="settings.isDark" :size="18" class="text-amber-400" />
+          <Moon v-else :size="18" class="text-indigo-400" />
         </button>
       </div>
     </div>

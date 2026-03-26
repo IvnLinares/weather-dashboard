@@ -13,6 +13,7 @@ import ErrorMessage from '@/components/ErrorMessage.vue'
 import TemperatureChart from '@/components/TemperatureChart.vue'
 import AirQualityBadge from '@/components/AirQualityBadge.vue'
 import HourlyForecast from '@/components/HourlyForecast.vue'
+import { Sun, Moon, Star, Loader, MapPin, Search } from 'lucide-vue-next'
 
 const store = useWeatherStore()
 const settings = useSettingsStore()
@@ -60,10 +61,11 @@ onMounted(() => handleLocate())
         <!-- Dark mode toggle -->
         <button
           @click="settings.toggleDark()"
-          class="glass-btn p-2.5 rounded-full text-xl leading-none"
+          class="glass-btn p-2.5 rounded-full leading-none flex items-center justify-center"
           :aria-label="settings.isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
         >
-          {{ settings.isDark ? '☀️' : '🌙' }}
+          <Sun v-if="settings.isDark" :size="18" class="text-amber-400" />
+          <Moon v-else :size="18" class="text-indigo-400" />
         </button>
       </div>
     </div>
@@ -81,9 +83,9 @@ onMounted(() => handleLocate())
           v-for="city in settings.favorites"
           :key="city"
           @click="handleSearch(city)"
-          class="glass-btn px-3.5 py-1.5 text-sm rounded-full font-medium"
+          class="glass-btn px-3.5 py-1.5 text-sm rounded-full font-medium flex items-center gap-1.5"
         >
-          ⭐ {{ city }}
+          <Star :size="14" class="fill-amber-400 text-amber-400" /> {{ city }}
         </button>
       </div>
     </div>
@@ -97,8 +99,8 @@ onMounted(() => handleLocate())
                disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Usar mi ubicación actual"
       >
-        <span v-if="geoLoading">⏳ Obteniendo ubicación…</span>
-        <span v-else>📍 Usar mi ubicación</span>
+        <span v-if="geoLoading" class="flex items-center gap-2"><Loader :size="16" class="animate-spin" /> Obteniendo ubicación…</span>
+        <span v-else class="flex items-center gap-2"><MapPin :size="16" /> Usar mi ubicación</span>
       </button>
       <ErrorMessage v-if="geoError" :message="geoError" />
     </div>
@@ -126,7 +128,7 @@ onMounted(() => handleLocate())
       v-if="!store.weatherLoading && !store.weather && !store.weatherError && !geoLoading"
       class="text-center text-gray-400/60 dark:text-gray-600/60 mt-4"
     >
-      <p class="text-5xl mb-3">🔍</p>
+      <Search :size="40" class="mx-auto mb-3 text-gray-300 dark:text-gray-600" />
       <p class="text-sm font-medium">Escribe el nombre de una ciudad o usa tu ubicación</p>
     </div>
 

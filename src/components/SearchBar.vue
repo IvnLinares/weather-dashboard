@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useSettingsStore } from '@/stores/settings'
+import { Clock } from 'lucide-vue-next'
 
 const emit = defineEmits<{ search: [city: string] }>()
 const settings = useSettingsStore()
@@ -47,9 +48,9 @@ function selectHistory(city: string) {
         class="glass-subtle px-2.5 py-0.5 text-xs rounded-full
                text-gray-600 dark:text-gray-300
                hover:bg-white/40 dark:hover:bg-white/[0.1]
-               transition-all duration-200"
+               transition-all duration-200 flex items-center gap-1"
       >
-        🕐 {{ city }}
+        <Clock :size="12" /> {{ city }}
       </button>
     </div>
   </div>

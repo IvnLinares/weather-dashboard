@@ -2,6 +2,7 @@
 import type { WeatherData } from '@/types/weather'
 import WeatherAnimation from '@/components/WeatherAnimation.vue'
 import { useSettingsStore } from '@/stores/settings'
+import { Star, Droplets, Wind, Sunrise, Sunset } from 'lucide-vue-next'
 
 const { weather } = defineProps<{ weather: WeatherData }>()
 const settings = useSettingsStore()
@@ -35,9 +36,9 @@ function windDirection(deg: number): string {
           <button
             @click="settings.toggleFavorite(weather.city)"
             :aria-label="settings.isFavorite(weather.city) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
-            class="text-xl leading-none transition-transform hover:scale-125 active:scale-95"
+            class="leading-none transition-transform hover:scale-125 active:scale-95"
           >
-            {{ settings.isFavorite(weather.city) ? '⭐' : '☆' }}
+            <Star :size="18" :class="settings.isFavorite(weather.city) ? 'fill-amber-400 text-amber-400' : 'text-gray-400 dark:text-gray-500'" />
           </button>
         </div>
         <p class="text-sm text-gray-600/80 dark:text-gray-300/60 capitalize mt-0.5">
@@ -69,7 +70,7 @@ function windDirection(deg: number): string {
     <div class="grid grid-cols-2 gap-3 border-t border-white/20 dark:border-white/[0.06] pt-4">
       <!-- Humedad -->
       <div class="flex items-center gap-2.5 text-sm">
-        <span class="text-xl">💧</span>
+        <Droplets :size="20" class="text-sky-400 shrink-0" />
         <div>
           <p class="text-xs text-gray-500/70 dark:text-gray-400/50 font-medium">Humedad</p>
           <p class="font-semibold">{{ weather.humidity }}%</p>
@@ -78,7 +79,7 @@ function windDirection(deg: number): string {
 
       <!-- Viento -->
       <div class="flex items-center gap-2.5 text-sm">
-        <span class="text-xl">💨</span>
+        <Wind :size="20" class="text-teal-400 shrink-0" />
         <div>
           <p class="text-xs text-gray-500/70 dark:text-gray-400/50 font-medium">Viento</p>
           <p class="font-semibold">{{ weather.windSpeed }} m/s {{ windDirection(weather.windDeg) }}</p>
@@ -87,7 +88,7 @@ function windDirection(deg: number): string {
 
       <!-- Amanecer -->
       <div class="flex items-center gap-2.5 text-sm">
-        <span class="text-xl">🌅</span>
+        <Sunrise :size="20" class="text-orange-400 shrink-0" />
         <div>
           <p class="text-xs text-gray-500/70 dark:text-gray-400/50 font-medium">Amanecer</p>
           <p class="font-semibold">{{ formatTime(weather.sunrise) }}</p>
@@ -96,7 +97,7 @@ function windDirection(deg: number): string {
 
       <!-- Atardecer -->
       <div class="flex items-center gap-2.5 text-sm">
-        <span class="text-xl">🌇</span>
+        <Sunset :size="20" class="text-rose-400 shrink-0" />
         <div>
           <p class="text-xs text-gray-500/70 dark:text-gray-400/50 font-medium">Atardecer</p>
           <p class="font-semibold">{{ formatTime(weather.sunset) }}</p>

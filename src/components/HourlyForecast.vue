@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { ForecastDay } from '@/types/weather'
 import { useSettingsStore } from '@/stores/settings'
+import { Clock, Droplets } from 'lucide-vue-next'
 
 const props = defineProps<{ days: ForecastDay[] }>()
 const settings = useSettingsStore()
@@ -23,8 +24,8 @@ function formatTime(dt: number): string {
 
 <template>
   <div class="w-full glass rounded-3xl p-5">
-    <h2 class="text-xs font-semibold text-gray-500/70 dark:text-gray-400/50 uppercase tracking-wider mb-4">
-      ⏱️ Próximas 24h
+    <h2 class="text-xs font-semibold text-gray-500/70 dark:text-gray-400/50 uppercase tracking-wider mb-4 flex items-center gap-1.5">
+      <Clock :size="14" /> Próximas 24h
     </h2>
     <div class="flex gap-3 overflow-x-auto pb-1 scrollbar-none">
       <div
@@ -45,8 +46,8 @@ function formatTime(dt: number): string {
         <p class="text-sm font-bold">
           {{ settings.toDisplay(item.temp) }}°
         </p>
-        <p class="text-xs text-gray-500/60 dark:text-gray-400/40">
-          💧 {{ item.humidity }}%
+        <p class="text-xs text-gray-500/60 dark:text-gray-400/40 flex items-center gap-0.5">
+          <Droplets :size="10" /> {{ item.humidity }}%
         </p>
       </div>
     </div>

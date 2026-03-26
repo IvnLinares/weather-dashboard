@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertTriangle } from 'lucide-vue-next'
 defineProps<{ message: string }>()
 </script>
 
@@ -10,7 +11,7 @@ defineProps<{ message: string }>()
            flex items-start gap-3"
     role="alert"
   >
-    <span class="text-xl mt-0.5">⚠️</span>
+    <AlertTriangle :size="20" class="text-red-400 shrink-0 mt-0.5" />
     <p class="text-sm font-medium">{{ message }}</p>
   </div>
 </template>
