@@ -51,8 +51,16 @@ export function useWeather() {
     error.value = null
     weather.value = null
 
+    let key: string
     try {
-      const key = getApiKey()
+      key = getApiKey()
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'API key no configurada.'
+      loading.value = false
+      return
+    }
+
+    try {
       const url = `${BASE_URL}/weather?q=${encodeURIComponent(city.trim())}&appid=${key}&units=metric&lang=es`
       const res = await fetch(url)
       const data: OWMWeatherResponse = await res.json()
@@ -90,8 +98,16 @@ export function useWeather() {
     error.value = null
     weather.value = null
 
+    let key: string
     try {
-      const key = getApiKey()
+      key = getApiKey()
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'API key no configurada.'
+      loading.value = false
+      return
+    }
+
+    try {
       const url = `${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${key}&units=metric&lang=es`
       const res = await fetch(url)
       const data: OWMWeatherResponse = await res.json()

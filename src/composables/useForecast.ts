@@ -85,8 +85,16 @@ export function useForecast() {
     error.value = null
     forecast.value = []
 
+    let key: string
     try {
-      const key = getApiKey()
+      key = getApiKey()
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'API key no configurada.'
+      loading.value = false
+      return
+    }
+
+    try {
       const url = `${BASE_URL}/forecast?q=${encodeURIComponent(city.trim())}&appid=${key}&units=metric&lang=es`
       const res = await fetch(url)
       const data: OWMForecastResponse = await res.json()
@@ -118,8 +126,16 @@ export function useForecast() {
     error.value = null
     forecast.value = []
 
+    let key: string
     try {
-      const key = getApiKey()
+      key = getApiKey()
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'API key no configurada.'
+      loading.value = false
+      return
+    }
+
+    try {
       const url = `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${key}&units=metric&lang=es`
       const res = await fetch(url)
       const data: OWMForecastResponse = await res.json()
