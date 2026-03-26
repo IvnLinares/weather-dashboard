@@ -14,15 +14,15 @@ interface Phrase {
 
 const phrases: Record<string, Phrase[]> = {
   Clear_hot: [
-    { text: 'Está bien', highlight: 'arrecho\nel sol.' },
+    { text: 'Está bien', highlight: 'hecho mierda\nel sol.' },
     { text: 'Hoy sí', highlight: 'pega\nel solazo.' },
-    { text: 'Se siente', highlight: 'bien\nchilero.' },
+    { text: 'Se siente', highlight: 'bien\nhorny.' },
     { text: 'Qué', highlight: 'calorón\ntan púchica.' },
   ],
   Clear_nice: [
-    { text: 'Está', highlight: 'bien\nchinón\nafuera.' },
-    { text: 'El día\nestá', highlight: 'bien\nchivo.' },
-    { text: 'Qué', highlight: 'bonito\nel día,\nvá.' },
+    { text: 'Está', highlight: 'bien\ncheineado\nel cielo.' },
+    { text: 'El día\nestá', highlight: 'bien\ncoqueto.' },
+    { text: 'Qué', highlight: 'bonito\nel día,\nvea.' },
   ],
   Clear_cold: [
     { text: 'Está\nhaciendo', highlight: 'un frío\nbien cabal.' },
@@ -34,20 +34,20 @@ const phrases: Record<string, Phrase[]> = {
     { text: 'Anda', highlight: 'cerrado\nel cielo,\nvá.' },
   ],
   Rain: [
-    { text: 'Está', highlight: 'cayendo\nel aguazo.' },
+    { text: 'Está', highlight: 'cayendo\nelver.' },
     { text: 'Se vino', highlight: 'el agua,\ncipote.' },
     { text: 'Agarrá', highlight: 'paraguas\nque llueve.' },
     { text: 'Está', highlight: 'lloviendo\nbien recio.' },
   ],
   Drizzle: [
-    { text: 'Está', highlight: 'chipiando\napenitas.' },
-    { text: 'Anda\ncayendo', highlight: 'una\nchipía.' },
+    { text: 'Está', highlight: 'cirniendo\napenitas.' },
+    { text: 'Anda\npariendo', highlight: 'un\nchivo.' },
     { text: 'Está como', highlight: 'medio\nlloviendo.' },
   ],
   Thunderstorm: [
     { text: 'Se armó', highlight: 'el\ntormentón,\ncipote.' },
-    { text: 'Están\ncayendo', highlight: 'unos\nryazos.' },
-    { text: 'Puta,', highlight: 'qué\ntormenta.' },
+    { text: 'Están\ncayendo', highlight: 'los\nrempalagos.' },
+    { text: 'Puta,', highlight: 'qué\npijazo de agua.' },
   ],
   Snow: [
     { text: 'Se puso', highlight: 'bien\nhelado.' },
@@ -55,8 +55,8 @@ const phrases: Record<string, Phrase[]> = {
   ],
   Fog: [
     { text: 'No se\nmira', highlight: 'ni mierda\nafuera.' },
-    { text: 'Está', highlight: 'bien\nneblinoso.' },
-    { text: 'Anda\ntodo', highlight: 'tapado\nde neblina.' },
+    { text: 'Están', highlight: 'fumando\nen el cielo.' },
+    { text: 'Anda\ntodo', highlight: 'tapado\nel diya.' },
   ],
 }
 
@@ -89,8 +89,8 @@ const phrase = computed(() => {
 </script>
 
 <template>
-  <div class="w-full max-w-lg mx-auto select-none">
-    <p class="text-4xl sm:text-5xl md:text-6xl font-black leading-[1.05] tracking-tight">
+  <div class="w-full select-none lg:text-left">
+    <p class="text-4xl sm:text-5xl md:text-6xl lg:text-5xl font-black leading-[1.05] tracking-tight">
       <span class="text-gray-800 dark:text-white whitespace-pre-line">{{ phrase.text }} </span>
       <span class="bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 bg-clip-text text-transparent whitespace-pre-line">{{ phrase.highlight }}</span>
     </p>

@@ -38,7 +38,7 @@ onMounted(() => handleLocate())
 </script>
 
 <template>
-  <div class="max-w-xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-safe flex flex-col gap-8">
+  <div class="max-w-xl lg:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-safe flex flex-col gap-8">
 
     <!-- Top bar -->
     <div class="flex items-center justify-between">
@@ -92,33 +92,47 @@ onMounted(() => handleLocate())
     <WeatherSkeleton v-if="store.weatherLoading" />
     <ErrorMessage v-if="store.weatherError" :message="store.weatherError" />
 
-    <!-- ═══ HERO SECTION ═══ -->
+    <!-- ═══ DESKTOP: Two-column layout ═══ -->
     <template v-if="store.weather">
-      <div class="flex flex-col items-center gap-6 -mt-2">
-        <!-- Salvadoran phrase -->
-        <WeatherPhrase :condition="store.weather.conditionMain" :temp="store.weather.temp" />
-        <!-- Current weather hero -->
-        <WeatherCard :weather="store.weather" />
-      </div>
+      <!-- Mobile: stacked / Desktop: side by side -->
+      <div class="flex flex-col lg:flex-row lg:gap-10 gap-8">
 
-      <!-- ═══ CONDITIONS ═══ -->
-      <div class="flex flex-col gap-3">
-        <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
-        <WeatherDetails :weather="store.weather" />
+        <!-- LEFT: Hero (phrase + weather) — sticky on desktop -->
+        <div class="flex flex-col items-center gap-6 -mt-2 lg:mt-0 lg:w-[380px] lg:shrink-0 lg:sticky lg:top-10 lg:self-start">
+          <WeatherPhrase :condition="store.weather.conditionMain" :temp="store.weather.temp" />
+          <WeatherCard :weather="store.weather" />
+        </div>
+
+        <!-- RIGHT: All data sections -->
+        <div class="flex flex-col gap-6 lg:flex-1 lg:min-w-0">
+          <!-- Conditions -->
+          <div class="flex flex-col gap-3">
+            <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
+            <WeatherDetails :weather="store.weather" />
+          </div>
+
+          <!-- Forecast -->
+          <template v-if="store.forecast.length && !store.forecastLoading">
+            <div class="flex flex-col gap-3">
+              <HourlyForecast :days="store.forecast" />
+              <ForecastList :days="store.forecast" />
+            </div>
+            <TemperatureChart :days="store.forecast" />
+          </template>
+          <ForecastSkeleton v-if="store.forecastLoading" />
+        </div>
       </div>
     </template>
 
-    <!-- ═══ FORECAST ═══ -->
-    <template v-if="store.forecast.length && !store.forecastLoading">
+    <!-- Forecast without weather (edge case: forecast loads separately) -->
+    <template v-if="!store.weather && store.forecast.length && !store.forecastLoading">
       <div class="flex flex-col gap-3">
         <HourlyForecast :days="store.forecast" />
         <ForecastList :days="store.forecast" />
       </div>
-
-      <!-- Chart -->
       <TemperatureChart :days="store.forecast" />
     </template>
-    <ForecastSkeleton v-if="store.forecastLoading" />
+    <ForecastSkeleton v-if="!store.weather && store.forecastLoading" />
 
     <!-- Empty state -->
     <div

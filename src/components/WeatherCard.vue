@@ -28,7 +28,7 @@ const settings = useSettingsStore()
     </div>
 
     <!-- Temperature -->
-    <span class="text-7xl sm:text-8xl font-extrabold bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent leading-none mt-1">
+    <span class="text-7xl sm:text-8xl lg:text-9xl font-extrabold bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent leading-none mt-1">
       {{ settings.toDisplay(weather.temp) }}°
     </span>
 

@@ -23,7 +23,7 @@ function formatTime(dt: number): string {
 </script>
 
 <template>
-  <div class="w-full glass rounded-3xl px-5 pt-5 pb-3">
+  <div class="w-full glass rounded-3xl px-5 pt-5 pb-3 lg:rounded-2xl">
     <h2 class="text-xs font-semibold text-gray-500/70 dark:text-gray-400/50 uppercase tracking-wider mb-4 flex items-center gap-1.5">
       <Clock :size="14" /> Próximas 24h
     </h2>
