@@ -1,118 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useWeather } from '@/composables/useWeather'
-import { useForecast } from '@/composables/useForecast'
-import { useGeolocation } from '@/composables/useGeolocation'
-import SearchBar from '@/components/SearchBar.vue'
-import WeatherCard from '@/components/WeatherCard.vue'
-import WeatherSkeleton from '@/components/WeatherSkeleton.vue'
-import ForecastList from '@/components/ForecastList.vue'
-import ForecastSkeleton from '@/components/ForecastSkeleton.vue'
-import ErrorMessage from '@/components/ErrorMessage.vue'
-import TemperatureChart from '@/components/TemperatureChart.vue'
+import { onMounted } from 'vue'
+import { RouterView } from 'vue-router'
+import { useSettingsStore } from '@/stores/settings'
 
-const { weather, loading: weatherLoading, error: weatherError, fetchByCoords: fetchWeatherByCoords, fetchByCity } = useWeather()
-const { forecast, loading: forecastLoading, fetchForecastByCoords, fetchForecastByCity } = useForecast()
-const { loading: geoLoading, error: geoError, locate } = useGeolocation()
-
-// Dark mode
-const isDark = ref(false)
-function toggleDark() {
-  isDark.value = !isDark.value
-  document.documentElement.classList.toggle('dark', isDark.value)
-  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
-}
-
-function handleSearch(city: string) {
-  fetchByCity(city)
-  fetchForecastByCity(city)
-}
-
-async function handleLocate() {
-  const pos = await locate()
-  if (pos) {
-    fetchWeatherByCoords(pos.lat, pos.lon)
-    fetchForecastByCoords(pos.lat, pos.lon)
-  }
-}
-
-onMounted(() => {
-  // Restore theme preference
-  const saved = localStorage.getItem('theme')
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  isDark.value = saved ? saved === 'dark' : prefersDark
-  document.documentElement.classList.toggle('dark', isDark.value)
-
-  handleLocate()
-})
+const settings = useSettingsStore()
+onMounted(() => settings.init())
 </script>
 
 <template>
-  <main class="min-h-screen bg-gradient-to-br from-sky-100 to-blue-200 dark:from-gray-900 dark:to-gray-800
-               text-gray-900 dark:text-gray-100 transition-colors duration-300">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col items-center gap-8">
-
-      <!-- Header -->
-      <div class="w-full flex items-center justify-between">
-        <div>
-          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-            🌤️ Weather Dashboard
-          </h1>
-          <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">
-            Consulta el clima de cualquier ciudad en tiempo real
-          </p>
-        </div>
-        <!-- Dark mode toggle -->
-        <button
-          @click="toggleDark"
-          class="p-2 rounded-full bg-white dark:bg-gray-700 shadow hover:shadow-md transition-all
-                 text-xl leading-none"
-          :aria-label="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
-        >
-          {{ isDark ? '☀️' : '🌙' }}
-        </button>
-      </div>
-
-      <!-- Búsqueda -->
-      <SearchBar @search="handleSearch" />
-
-      <!-- Botón geolocalización -->
-      <div class="flex flex-col items-center gap-2">
-        <button
-          @click="handleLocate"
-          :disabled="geoLoading"
-          class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
-                 bg-sky-500 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed
-                 text-white transition-colors"
-          aria-label="Usar mi ubicación actual"
-        >
-          <span v-if="geoLoading">⏳ Obteniendo ubicación…</span>
-          <span v-else>📍 Usar mi ubicación</span>
-        </button>
-        <ErrorMessage v-if="geoError" :message="geoError" />
-      </div>
-
-      <!-- Clima actual -->
-      <WeatherSkeleton v-if="weatherLoading" />
-      <ErrorMessage v-else-if="weatherError" :message="weatherError" />
-      <WeatherCard v-else-if="weather" :weather="weather" />
-
-      <!-- Pronóstico 5 días -->
-      <ForecastSkeleton v-if="forecastLoading" />
-      <ForecastList v-else-if="forecast.length" :days="forecast" />
-
-      <!-- Gráfico temperatura 24h -->
-      <TemperatureChart v-if="forecast.length && !forecastLoading" :days="forecast" />
-
-      <!-- Pantalla vacía -->
-      <div
-        v-if="!weatherLoading && !weather && !weatherError && !geoLoading"
-        class="text-center text-gray-400 dark:text-gray-600 mt-4"
-      >
-        <p class="text-5xl mb-3">🔍</p>
-        <p class="text-sm">Escribe el nombre de una ciudad para ver el clima</p>
-      </div>
-
-    </div>
+  <main
+    class="min-h-screen bg-gradient-to-br from-sky-100 to-blue-200 dark:from-gray-900 dark:to-gray-800
+           text-gray-900 dark:text-gray-100 transition-colors duration-300"
+  >
+    <RouterView />
   </main>
 </template>
+

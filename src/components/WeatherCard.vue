@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { WeatherData } from '@/types/weather'
 import WeatherAnimation from '@/components/WeatherAnimation.vue'
+import { useSettingsStore } from '@/stores/settings'
 
 const { weather } = defineProps<{ weather: WeatherData }>()
+const settings = useSettingsStore()
 
 function formatTime(unix: number): string {
   return new Date(unix * 1000).toLocaleTimeString('es-SV', {
@@ -25,9 +27,19 @@ function windDirection(deg: number): string {
     <!-- Ciudad y país -->
     <div class="flex items-start justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-          {{ weather.city }}, {{ weather.country }}
-        </h2>
+        <div class="flex items-center gap-2">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+            {{ weather.city }}, {{ weather.country }}
+          </h2>
+          <!-- Favorito toggle -->
+          <button
+            @click="settings.toggleFavorite(weather.city)"
+            :aria-label="settings.isFavorite(weather.city) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+            class="text-xl leading-none transition-transform hover:scale-125"
+          >
+            {{ settings.isFavorite(weather.city) ? '⭐' : '☆' }}
+          </button>
+        </div>
         <p class="text-sm text-gray-500 dark:text-gray-400 capitalize mt-0.5">
           {{ weather.description }}
         </p>
@@ -44,10 +56,12 @@ function windDirection(deg: number): string {
 
     <!-- Temperatura principal -->
     <div class="flex items-end gap-3">
-      <span class="text-6xl font-extrabold text-sky-500">{{ weather.temp }}°C</span>
+      <span class="text-6xl font-extrabold text-sky-500">
+        {{ settings.toDisplay(weather.temp) }}{{ settings.unitSymbol() }}
+      </span>
       <div class="text-sm text-gray-500 dark:text-gray-400 pb-2">
-        <p>Sensación: <span class="font-medium">{{ weather.feelsLike }}°C</span></p>
-        <p>Máx {{ weather.tempMax }}° / Mín {{ weather.tempMin }}°</p>
+        <p>Sensación: <span class="font-medium">{{ settings.toDisplay(weather.feelsLike) }}{{ settings.unitSymbol() }}</span></p>
+        <p>Máx {{ settings.toDisplay(weather.tempMax) }}° / Mín {{ settings.toDisplay(weather.tempMin) }}°</p>
       </div>
     </div>
 
@@ -91,3 +105,4 @@ function windDirection(deg: number): string {
     </div>
   </div>
 </template>
+

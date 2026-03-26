@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Line } from 'vue-chartjs'
+import { useSettingsStore } from '@/stores/settings'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,6 +18,7 @@ import type { ForecastDay } from '@/types/weather'
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
 
 const props = defineProps<{ days: ForecastDay[] }>()
+const settings = useSettingsStore()
 
 // Flatten all items from all days, take next 8 (≈ 24h)
 const next24hItems = computed(() =>
@@ -32,13 +34,13 @@ const labels = computed(() =>
   }),
 )
 
-const temps = computed(() => next24hItems.value.map((item) => item.temp))
+const temps = computed(() => next24hItems.value.map((item) => settings.toDisplay(item.temp)))
 
 const chartData = computed(() => ({
   labels: labels.value,
   datasets: [
     {
-      label: 'Temperatura (°C)',
+      label: `Temperatura (${settings.unitSymbol()})`,
       data: temps.value,
       borderColor: '#38bdf8',
       backgroundColor: 'rgba(56,189,248,0.15)',
@@ -60,7 +62,7 @@ const chartOptions = {
     title: { display: false },
     tooltip: {
       callbacks: {
-        label: (ctx: { parsed: { y: number | null } }) => ` ${ctx.parsed.y ?? ''}°C`,
+        label: (ctx: { parsed: { y: number | null } }) => ` ${ctx.parsed.y ?? ''}${settings.unitSymbol()}`,
       },
     },
   },

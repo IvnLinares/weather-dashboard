@@ -14,6 +14,8 @@ function mapWeatherResponse(raw: OWMWeatherResponse): WeatherData {
   return {
     city: raw.name,
     country: raw.sys.country,
+    lat: raw.coord.lat,
+    lon: raw.coord.lon,
     temp: Math.round(raw.main.temp),
     feelsLike: Math.round(raw.main.feels_like),
     tempMin: Math.round(raw.main.temp_min),
