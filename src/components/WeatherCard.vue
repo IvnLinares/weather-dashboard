@@ -45,13 +45,8 @@ function windDirection(deg: number): string {
           {{ weather.description }}
         </p>
       </div>
-      <div class="flex items-center gap-2 -mt-1">
+      <div class="flex items-center -mt-1">
         <WeatherAnimation :condition="weather.conditionMain" :condition-id="weather.conditionId" />
-        <img
-          :src="`https://openweathermap.org/img/wn/${weather.icon}@2x.png`"
-          :alt="weather.description"
-          class="w-14 h-14 drop-shadow-lg"
-        />
       </div>
     </div>
 

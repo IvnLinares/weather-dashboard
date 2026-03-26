@@ -23,11 +23,11 @@ function formatTime(dt: number): string {
 </script>
 
 <template>
-  <div class="w-full glass rounded-3xl p-5">
+  <div class="w-full glass rounded-3xl px-5 pt-5 pb-3">
     <h2 class="text-xs font-semibold text-gray-500/70 dark:text-gray-400/50 uppercase tracking-wider mb-4 flex items-center gap-1.5">
       <Clock :size="14" /> Próximas 24h
     </h2>
-    <div class="flex gap-3 overflow-x-auto pb-1 scrollbar-none">
+    <div class="flex gap-3 overflow-x-auto scrollbar-none">
       <div
         v-for="item in items"
         :key="item.dt"
