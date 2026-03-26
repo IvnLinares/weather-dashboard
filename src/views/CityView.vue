@@ -71,24 +71,22 @@ onMounted(() => {
       <div class="flex flex-col lg:flex-row lg:gap-10 gap-8">
 
         <!-- LEFT: Hero -->
-        <div class="flex flex-col items-center gap-6 -mt-2 lg:mt-0 lg:w-[380px] lg:shrink-0 lg:sticky lg:top-10 lg:self-start">
+        <div class="flex flex-col items-center gap-6 -mt-2 lg:mt-0 lg:w-[380px] lg:shrink-0 lg:sticky lg:top-10 lg:self-start animate-fade-in-up stagger-1">
           <WeatherPhrase :condition="store.weather.conditionMain" :temp="store.weather.temp" />
           <WeatherCard :weather="store.weather" />
         </div>
 
         <!-- RIGHT: Data -->
         <div class="flex flex-col gap-6 lg:flex-1 lg:min-w-0">
-          <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-3 animate-fade-in-up stagger-2">
             <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
             <WeatherDetails :weather="store.weather" />
           </div>
 
           <template v-if="store.forecast.length && !store.forecastLoading">
-            <div class="flex flex-col gap-3">
-              <HourlyForecast :days="store.forecast" />
-              <ForecastList :days="store.forecast" />
-            </div>
-            <TemperatureChart :days="store.forecast" />
+            <HourlyForecast :days="store.forecast" class="animate-fade-in-up stagger-3" />
+            <ForecastList :days="store.forecast" class="animate-fade-in-up stagger-4" />
+            <TemperatureChart :days="store.forecast" class="animate-fade-in-up stagger-5" />
           </template>
           <ForecastSkeleton v-if="store.forecastLoading" />
         </div>

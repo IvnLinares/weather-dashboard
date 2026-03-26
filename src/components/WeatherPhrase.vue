@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 import type { WeatherCondition } from '@/types/weather'
+import { Sun, CloudSun, Thermometer, Cloud, CloudRain, CloudDrizzle, CloudLightning, Snowflake, CloudFog } from 'lucide-vue-next'
 
 const props = defineProps<{
   condition: WeatherCondition
@@ -14,49 +15,49 @@ interface Phrase {
 
 const phrases: Record<string, Phrase[]> = {
   Clear_hot: [
-    { text: 'Está bien', highlight: 'hecho mierda\nel sol.' },
-    { text: 'Hoy sí', highlight: 'pega\nel solazo.' },
-    { text: 'Se siente', highlight: 'bien\nhorny.' },
-    { text: 'Qué', highlight: 'calorón\ntan púchica.' },
+    { text: 'Está bien', highlight: 'hecho mierda el sol.' },
+    { text: 'Hoy sí', highlight: 'pega el solazo.' },
+    { text: 'Se siente', highlight: 'bien horny.' },
+    { text: 'Qué', highlight: 'calorón tan púchica.' },
   ],
   Clear_nice: [
-    { text: 'Está', highlight: 'bien\ncheineado\nel cielo.' },
-    { text: 'El día\nestá', highlight: 'bien\ncoqueto.' },
-    { text: 'Qué', highlight: 'bonito\nel día,\nvea.' },
+    { text: 'Está', highlight: 'bien cheineado el cielo.' },
+    { text: 'El día está', highlight: 'bien coqueto.' },
+    { text: 'Qué', highlight: 'bonito el día, vea.' },
   ],
   Clear_cold: [
-    { text: 'Está\nhaciendo', highlight: 'un frío\nbien cabal.' },
-    { text: 'Hoy sí', highlight: 'pega\nel fresquito.' },
+    { text: 'Está haciendo', highlight: 'un frío bien cabal.' },
+    { text: 'Hoy sí', highlight: 'pega el fresquito.' },
   ],
   Clouds: [
-    { text: 'Está', highlight: 'bien\nnublado.' },
-    { text: 'El cielo\nestá', highlight: 'todo\ntapado.' },
-    { text: 'Anda', highlight: 'cerrado\nel cielo,\nvá.' },
+    { text: 'Está', highlight: 'bien nublado.' },
+    { text: 'El cielo está', highlight: 'todo tapado.' },
+    { text: 'Anda', highlight: 'cerrado el cielo, vea.' },
   ],
   Rain: [
-    { text: 'Está', highlight: 'cayendo\nelver.' },
-    { text: 'Se vino', highlight: 'el agua,\ncipote.' },
-    { text: 'Agarrá', highlight: 'paraguas\nque llueve.' },
-    { text: 'Está', highlight: 'lloviendo\nbien recio.' },
+    { text: 'Está', highlight: 'cayendo elver.' },
+    { text: 'Se vino', highlight: 'el agua, cipote.' },
+    { text: 'Agarrá', highlight: 'paraguas que llueve.' },
+    { text: 'Está', highlight: 'lloviendo bien recio.' },
   ],
   Drizzle: [
-    { text: 'Está', highlight: 'cirniendo\napenitas.' },
-    { text: 'Anda\npariendo', highlight: 'un\nchivo.' },
-    { text: 'Está como', highlight: 'medio\nlloviendo.' },
+    { text: 'Está', highlight: 'cirniendo apenitas.' },
+    { text: 'Anda pariendo', highlight: 'un chivo.' },
+    { text: 'Está como', highlight: 'medio lloviendo.' },
   ],
   Thunderstorm: [
-    { text: 'Se armó', highlight: 'el\ntormentón,\ncipote.' },
-    { text: 'Están\ncayendo', highlight: 'los\nrempalagos.' },
-    { text: 'Puta,', highlight: 'qué\npijazo de agua.' },
+    { text: 'Se armó', highlight: 'el tormentón, cipote.' },
+    { text: 'Están cayendo', highlight: 'los rempalagos.' },
+    { text: 'Puta,', highlight: 'qué pijazo de agua.' },
   ],
   Snow: [
-    { text: 'Se puso', highlight: 'bien\nhelado.' },
-    { text: 'Está', highlight: 'cayendo\nnieve, bicho.' },
+    { text: 'Se puso', highlight: 'bien helado.' },
+    { text: 'Está', highlight: 'cayendo nieve, bicho.' },
   ],
   Fog: [
-    { text: 'No se\nmira', highlight: 'ni mierda\nafuera.' },
-    { text: 'Están', highlight: 'fumando\nen el cielo.' },
-    { text: 'Anda\ntodo', highlight: 'tapado\nel diya.' },
+    { text: 'No se ve', highlight: 'ni mierda.' },
+    { text: 'Están', highlight: 'fumando en el cielo.' },
+    { text: 'Anda todo', highlight: 'tapado el diya.' },
   ],
 }
 
@@ -79,6 +80,18 @@ function seededRandom(seed: string): number {
   return Math.abs(hash)
 }
 
+const conditionIcons: Record<string, Component> = {
+  Clear_hot: Sun,
+  Clear_nice: CloudSun,
+  Clear_cold: Thermometer,
+  Clouds: Cloud,
+  Rain: CloudRain,
+  Drizzle: CloudDrizzle,
+  Thunderstorm: CloudLightning,
+  Snow: Snowflake,
+  Fog: CloudFog,
+}
+
 const phrase = computed(() => {
   const key = getConditionKey(props.condition, props.temp)
   const list = phrases[key] || phrases['Clouds']
@@ -86,13 +99,19 @@ const phrase = computed(() => {
   const idx = seededRandom(today + key) % list.length
   return list[idx]
 })
+
+const icon = computed(() => {
+  const key = getConditionKey(props.condition, props.temp)
+  return conditionIcons[key] || Cloud
+})
 </script>
 
 <template>
-  <div class="w-full select-none lg:text-left">
-    <p class="text-4xl sm:text-5xl md:text-6xl lg:text-5xl font-black leading-[1.05] tracking-tight">
-      <span class="text-gray-800 dark:text-white whitespace-pre-line">{{ phrase.text }} </span>
-      <span class="bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 bg-clip-text text-transparent whitespace-pre-line">{{ phrase.highlight }}</span>
+  <div class="w-full select-none lg:text-left flex items-start gap-3">
+    <component :is="icon" :size="28" class="text-gray-300 dark:text-white/30 shrink-0 mt-1" />
+    <p class="text-3xl sm:text-4xl lg:text-4xl font-bold leading-snug tracking-tight">
+      <span class="text-gray-400 dark:text-white/40">{{ phrase.text }} </span>
+      <span class="text-gray-900 dark:text-white">{{ phrase.highlight }}</span>
     </p>
   </div>
 </template>

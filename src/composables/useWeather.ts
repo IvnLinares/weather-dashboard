@@ -29,6 +29,8 @@ function mapWeatherResponse(raw: OWMWeatherResponse): WeatherData {
     conditionId: raw.weather[0].id,
     sunrise: raw.sys.sunrise,
     sunset: raw.sys.sunset,
+    pressure: raw.main.pressure,
+    visibility: raw.visibility,
     dt: raw.dt,
   }
 }
