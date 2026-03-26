@@ -22,14 +22,14 @@ function windDirection(deg: number): string {
 
 <template>
   <div
-    class="w-full max-w-lg mx-auto glass-strong rounded-3xl p-6
-           flex flex-col gap-4"
+    class="w-full max-w-lg mx-auto glass-strong rounded-3xl p-4 sm:p-6
+           flex flex-col gap-3 sm:gap-4"
   >
     <!-- Ciudad y país -->
     <div class="flex items-start justify-between">
       <div>
         <div class="flex items-center gap-2">
-          <h2 class="text-2xl font-bold">
+          <h2 class="text-lg sm:text-2xl font-bold truncate max-w-[200px] sm:max-w-none">
             {{ weather.city }}, {{ weather.country }}
           </h2>
           <!-- Favorito toggle -->
@@ -56,11 +56,11 @@ function windDirection(deg: number): string {
     </div>
 
     <!-- Temperatura principal -->
-    <div class="flex items-end gap-3">
-      <span class="text-6xl font-extrabold bg-gradient-to-r from-sky-500 to-blue-500 bg-clip-text text-transparent">
+    <div class="flex items-end gap-2 sm:gap-3">
+      <span class="text-5xl sm:text-6xl font-extrabold bg-gradient-to-r from-sky-500 to-blue-500 bg-clip-text text-transparent">
         {{ settings.toDisplay(weather.temp) }}{{ settings.unitSymbol() }}
       </span>
-      <div class="text-sm text-gray-600/80 dark:text-gray-300/60 pb-2">
+      <div class="text-xs sm:text-sm text-gray-600/80 dark:text-gray-300/60 pb-1 sm:pb-2">
         <p>Sensación: <span class="font-semibold">{{ settings.toDisplay(weather.feelsLike) }}{{ settings.unitSymbol() }}</span></p>
         <p>Máx {{ settings.toDisplay(weather.tempMax) }}° / Mín {{ settings.toDisplay(weather.tempMin) }}°</p>
       </div>

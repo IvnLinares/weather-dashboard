@@ -31,7 +31,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col items-center gap-6">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-safe flex flex-col items-center gap-5 sm:gap-6">
 
     <!-- Header -->
     <div class="w-full flex items-center justify-between">
@@ -43,7 +43,7 @@ onMounted(() => {
         >
           <ChevronLeft :size="16" /> Inicio
         </button>
-        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
+        <h1 class="text-xl sm:text-3xl font-bold tracking-tight">
           Weather
         </h1>
       </div>

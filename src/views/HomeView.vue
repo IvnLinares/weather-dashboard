@@ -36,15 +36,15 @@ onMounted(() => handleLocate())
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col items-center gap-6">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-safe flex flex-col items-center gap-5 sm:gap-6">
 
     <!-- Header -->
     <div class="w-full flex items-center justify-between">
       <div>
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">
+        <h1 class="text-2xl sm:text-4xl font-bold tracking-tight">
           Weather
         </h1>
-        <p class="text-gray-500/80 dark:text-gray-400/60 mt-0.5 text-sm font-medium">
+        <p class="text-gray-500/80 dark:text-gray-400/60 mt-0.5 text-xs sm:text-sm font-medium hidden sm:block">
           Consulta el clima en tiempo real
         </p>
       </div>

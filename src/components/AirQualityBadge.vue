@@ -6,7 +6,7 @@ defineProps<{ data: AirQualityData }>()
 </script>
 
 <template>
-  <div class="w-full max-w-lg mx-auto glass rounded-3xl p-4 flex items-center justify-between gap-4">
+  <div class="w-full max-w-lg mx-auto glass rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
     <div class="flex items-center gap-3">
       <Leaf :size="22" class="text-emerald-500 shrink-0" />
       <div>
@@ -19,7 +19,7 @@ defineProps<{ data: AirQualityData }>()
         </p>
       </div>
     </div>
-    <div class="flex gap-4 text-right">
+    <div class="flex gap-4 sm:text-right pl-9 sm:pl-0">
       <div>
         <p class="text-xs text-gray-500/60 dark:text-gray-400/40 font-medium">PM2.5</p>
         <p class="text-sm font-semibold">{{ data.pm25.toFixed(1) }} µg/m³</p>
