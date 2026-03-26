@@ -140,7 +140,7 @@ export const useWeatherStore = defineStore('weather', () => {
         weatherError.value = res.status === 404
           ? `No se encontró "${city}". Verifica el nombre e inténtalo de nuevo.`
           : res.status === 401
-            ? 'API key inválida. Revisa tu archivo .env.'
+            ? 'API key inválida. Revisa en tu archivo .env.'
             : (data.message ?? 'Error al consultar el clima.')
         return
       }
