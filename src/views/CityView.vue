@@ -5,6 +5,7 @@ import { useWeatherStore } from '@/stores/weather'
 import { useSettingsStore } from '@/stores/settings'
 import SearchBar from '@/components/SearchBar.vue'
 import WeatherCard from '@/components/WeatherCard.vue'
+import WeatherDetails from '@/components/WeatherDetails.vue'
 import WeatherSkeleton from '@/components/WeatherSkeleton.vue'
 import ForecastList from '@/components/ForecastList.vue'
 import ForecastSkeleton from '@/components/ForecastSkeleton.vue'
@@ -12,6 +13,8 @@ import ErrorMessage from '@/components/ErrorMessage.vue'
 import TemperatureChart from '@/components/TemperatureChart.vue'
 import AirQualityBadge from '@/components/AirQualityBadge.vue'
 import HourlyForecast from '@/components/HourlyForecast.vue'
+import WeatherPhrase from '@/components/WeatherPhrase.vue'
+import { ChevronLeft } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
@@ -30,59 +33,50 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex flex-col items-center gap-8">
+  <div class="max-w-xl lg:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-safe flex flex-col gap-8">
 
-    <!-- Header -->
-    <div class="w-full flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <button
-          @click="router.push('/')"
-          class="text-gray-400 hover:text-sky-500 transition-colors"
-          aria-label="Volver al inicio"
-        >
-          ← Inicio
-        </button>
-        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-          🌤️ Weather Dashboard
-        </h1>
-      </div>
-      <div class="flex items-center gap-2">
-        <button
-          @click="settings.toggleUnit()"
-          class="px-3 py-1.5 rounded-full bg-white dark:bg-gray-700 shadow hover:shadow-md
-                 text-sm font-semibold transition-all text-gray-700 dark:text-gray-200"
-        >
-          {{ settings.unitSymbol() }}
-        </button>
-        <button
-          @click="settings.toggleDark()"
-          class="p-2 rounded-full bg-white dark:bg-gray-700 shadow hover:shadow-md transition-all text-xl leading-none"
-        >
-          {{ settings.isDark ? '☀️' : '🌙' }}
-        </button>
-      </div>
+    <!-- Top bar: back + search -->
+    <div class="flex items-center gap-2">
+      <button
+        @click="router.push('/')"
+        class="glass-btn p-2 rounded-full leading-none flex items-center justify-center shrink-0"
+        aria-label="Volver al inicio"
+      >
+        <ChevronLeft :size="18" />
+      </button>
+      <SearchBar @search="handleSearch" class="flex-1 min-w-0" />
     </div>
 
-    <!-- Búsqueda -->
-    <SearchBar @search="handleSearch" />
-
-    <!-- Clima actual -->
+    <!-- Loading / Error -->
     <WeatherSkeleton v-if="store.weatherLoading" />
-    <ErrorMessage v-else-if="store.weatherError" :message="store.weatherError" />
-    <WeatherCard v-else-if="store.weather" :weather="store.weather" />
+    <ErrorMessage v-if="store.weatherError" :message="store.weatherError" />
 
-    <!-- AQI -->
-    <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
+    <!-- ═══ DESKTOP: Two-column layout ═══ -->
+    <template v-if="store.weather">
+      <div class="flex flex-col lg:flex-row lg:gap-10 gap-8">
 
-    <!-- Vista horaria 24h -->
-    <HourlyForecast v-if="store.forecast.length && !store.forecastLoading" :days="store.forecast" />
+        <!-- LEFT: Hero -->
+        <div class="flex flex-col items-center gap-6 -mt-2 lg:mt-0 lg:w-[380px] lg:shrink-0 lg:sticky lg:top-10 lg:self-start animate-fade-in-up stagger-1">
+          <WeatherPhrase :condition="store.weather.conditionMain" :temp="store.weather.temp" />
+          <WeatherCard :weather="store.weather" />
+        </div>
 
-    <!-- Pronóstico 5 días -->
-    <ForecastSkeleton v-if="store.forecastLoading" />
-    <ForecastList v-else-if="store.forecast.length" :days="store.forecast" />
+        <!-- RIGHT: Data -->
+        <div class="flex flex-col gap-6 lg:flex-1 lg:min-w-0">
+          <div class="flex flex-col gap-3 animate-fade-in-up stagger-2">
+            <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
+            <WeatherDetails :weather="store.weather" />
+          </div>
 
-    <!-- Gráfico temperatura 24h -->
-    <TemperatureChart v-if="store.forecast.length && !store.forecastLoading" :days="store.forecast" />
+          <template v-if="store.forecast.length && !store.forecastLoading">
+            <HourlyForecast :days="store.forecast" class="animate-fade-in-up stagger-3" />
+            <ForecastList :days="store.forecast" class="animate-fade-in-up stagger-4" />
+            <TemperatureChart :days="store.forecast" class="animate-fade-in-up stagger-5" />
+          </template>
+          <ForecastSkeleton v-if="store.forecastLoading" />
+        </div>
+      </div>
+    </template>
 
   </div>
 </template>

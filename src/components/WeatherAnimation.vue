@@ -16,7 +16,9 @@ defineProps<{ condition: WeatherCondition; conditionId: number }>()
   <!-- Rain / Drizzle / Thunderstorm -->
   <div v-else-if="['Rain', 'Drizzle', 'Thunderstorm'].includes(condition)" class="weather-anim" aria-hidden="true">
     <div class="cloud cloud-rain" />
-    <div v-if="condition === 'Thunderstorm'" class="lightning">⚡</div>
+    <div v-if="condition === 'Thunderstorm'" class="lightning">
+      <svg width="16" height="20" viewBox="0 0 24 24" fill="#facc15" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 10 10-12h-9l1-10z"/></svg>
+    </div>
     <div class="drops">
       <span v-for="i in 10" :key="i" class="drop" :style="{ '--i': i }" />
     </div>

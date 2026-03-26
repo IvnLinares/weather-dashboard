@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { ForecastDay } from '@/types/weather'
 import { useSettingsStore } from '@/stores/settings'
+import { Clock, Droplets } from 'lucide-vue-next'
 
 const props = defineProps<{ days: ForecastDay[] }>()
 const settings = useSettingsStore()
@@ -22,30 +23,31 @@ function formatTime(dt: number): string {
 </script>
 
 <template>
-  <div class="w-full bg-white dark:bg-gray-800 rounded-2xl shadow p-5">
-    <h2 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
-      ⏱️ Próximas 24h
+  <div class="w-full glass rounded-3xl px-5 pt-5 pb-3 lg:rounded-2xl">
+    <h2 class="text-xs font-semibold text-gray-500/70 dark:text-gray-400/50 uppercase tracking-wider mb-4 flex items-center gap-1.5">
+      <Clock :size="14" /> Próximas 24h
     </h2>
-    <div class="flex gap-3 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-700">
+    <div class="flex gap-3 overflow-x-auto scrollbar-none">
       <div
         v-for="item in items"
         :key="item.dt"
-        class="flex flex-col items-center gap-1 min-w-[64px] bg-sky-50 dark:bg-gray-700/50
-               rounded-xl px-2 py-3 text-center"
+        class="flex flex-col items-center gap-1 flex-1 min-w-[64px] glass-subtle
+               rounded-2xl px-2 py-3 text-center hover:bg-white/30 dark:hover:bg-white/[0.08]
+               transition-all duration-200"
       >
-        <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">
+        <p class="text-xs text-gray-600/70 dark:text-gray-300/50 font-medium">
           {{ formatTime(item.dt) }}
         </p>
         <img
           :src="`https://openweathermap.org/img/wn/${item.icon}.png`"
           :alt="item.description"
-          class="w-10 h-10"
+          class="w-10 h-10 drop-shadow-md"
         />
-        <p class="text-sm font-bold text-gray-800 dark:text-gray-100">
+        <p class="text-sm font-bold">
           {{ settings.toDisplay(item.temp) }}°
         </p>
-        <p class="text-xs text-gray-400 dark:text-gray-400">
-          💧 {{ item.humidity }}%
+        <p class="text-xs text-gray-500/60 dark:text-gray-400/40 flex items-center gap-0.5">
+          <Droplets :size="10" /> {{ item.humidity }}%
         </p>
       </div>
     </div>

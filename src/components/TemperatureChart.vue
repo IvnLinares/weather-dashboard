@@ -14,6 +14,7 @@ import {
   Filler,
 } from 'chart.js'
 import type { ForecastDay } from '@/types/weather'
+import { Thermometer } from 'lucide-vue-next'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
 
@@ -84,11 +85,11 @@ const chartOptions = {
 </script>
 
 <template>
-  <div class="w-full bg-white dark:bg-gray-800 rounded-2xl shadow p-5">
-    <h2 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
-      🌡️ Temperatura próximas 24h
+  <div class="w-full glass rounded-3xl p-5">
+    <h2 class="text-xs font-semibold text-gray-500/70 dark:text-gray-400/50 uppercase tracking-wider mb-4 flex items-center gap-1.5">
+      <Thermometer :size="14" /> Temperatura próximas 24h
     </h2>
-    <div class="h-48">
+    <div class="h-48 lg:h-64">
       <Line :data="chartData" :options="chartOptions" />
     </div>
   </div>

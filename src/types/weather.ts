@@ -5,9 +5,10 @@ export interface OWMWeatherResponse {
   name: string
   coord: { lat: number; lon: number }
   sys: { country: string; sunrise: number; sunset: number }
-  main: { temp: number; feels_like: number; temp_min: number; temp_max: number; humidity: number }
+  main: { temp: number; feels_like: number; temp_min: number; temp_max: number; humidity: number; pressure: number }
   wind: { speed: number; deg: number }
   weather: { id: number; main: string; description: string; icon: string }[]
+  visibility: number
   dt: number
   cod: number | string
   message?: string
@@ -64,6 +65,8 @@ export interface WeatherData {
   conditionId: number
   sunrise: number
   sunset: number
+  pressure: number
+  visibility: number
   dt: number
 }
 
