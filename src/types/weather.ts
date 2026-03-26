@@ -3,6 +3,7 @@
 // --- Respuesta cruda de /weather ---
 export interface OWMWeatherResponse {
   name: string
+  coord: { lat: number; lon: number }
   sys: { country: string; sunrise: number; sunset: number }
   main: { temp: number; feels_like: number; temp_min: number; temp_max: number; humidity: number }
   wind: { speed: number; deg: number }
@@ -10,6 +11,23 @@ export interface OWMWeatherResponse {
   dt: number
   cod: number | string
   message?: string
+}
+
+// --- Respuesta cruda de /air_pollution ---
+export interface OWMAirQualityResponse {
+  list: Array<{
+    main: { aqi: 1 | 2 | 3 | 4 | 5 }
+    components: { pm2_5: number; pm10: number; no2: number; o3: number }
+    dt: number
+  }>
+}
+
+export interface AirQualityData {
+  aqi: 1 | 2 | 3 | 4 | 5
+  label: string
+  color: string
+  pm25: number
+  pm10: number
 }
 
 // --- Respuesta cruda de /forecast ---
@@ -31,6 +49,8 @@ export interface OWMForecastResponse {
 export interface WeatherData {
   city: string
   country: string
+  lat: number
+  lon: number
   temp: number
   feelsLike: number
   tempMin: number

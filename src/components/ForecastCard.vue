@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { ForecastDay } from '@/types/weather'
+import { useSettingsStore } from '@/stores/settings'
 
 defineProps<{ day: ForecastDay }>()
+const settings = useSettingsStore()
 </script>
 
 <template>
@@ -28,8 +30,8 @@ defineProps<{ day: ForecastDay }>()
 
     <!-- Temperaturas -->
     <div class="flex items-center gap-2 mt-1">
-      <span class="text-sm font-bold text-sky-500">{{ day.tempMax }}°</span>
-      <span class="text-xs text-gray-400">/ {{ day.tempMin }}°</span>
+      <span class="text-sm font-bold text-sky-500">{{ settings.toDisplay(day.tempMax) }}°</span>
+      <span class="text-xs text-gray-400">/ {{ settings.toDisplay(day.tempMin) }}°</span>
     </div>
   </div>
 </template>
