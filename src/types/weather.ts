@@ -1,6 +1,33 @@
 // Tipos TypeScript para la API de OpenWeatherMap
-// Se implementarán en la Fase 2
 
+// --- Respuesta cruda de /weather ---
+export interface OWMWeatherResponse {
+  name: string
+  sys: { country: string; sunrise: number; sunset: number }
+  main: { temp: number; feels_like: number; temp_min: number; temp_max: number; humidity: number }
+  wind: { speed: number; deg: number }
+  weather: { id: number; main: string; description: string; icon: string }[]
+  dt: number
+  cod: number | string
+  message?: string
+}
+
+// --- Respuesta cruda de /forecast ---
+export interface OWMForecastItem {
+  dt: number
+  main: { temp: number; feels_like: number; temp_min: number; temp_max: number; humidity: number }
+  wind: { speed: number; deg: number }
+  weather: { id: number; main: string; description: string; icon: string }[]
+}
+
+export interface OWMForecastResponse {
+  list: OWMForecastItem[]
+  city: { name: string; country: string }
+  cod: string
+  message?: string
+}
+
+// --- Modelos internos ---
 export interface WeatherData {
   city: string
   country: string
@@ -13,6 +40,7 @@ export interface WeatherData {
   windDeg: number
   description: string
   icon: string
+  conditionMain: WeatherCondition
   conditionId: number
   sunrise: number
   sunset: number
