@@ -13,6 +13,7 @@ import ErrorMessage from '@/components/ErrorMessage.vue'
 import TemperatureChart from '@/components/TemperatureChart.vue'
 import AirQualityBadge from '@/components/AirQualityBadge.vue'
 import HourlyForecast from '@/components/HourlyForecast.vue'
+import WeatherPhrase from '@/components/WeatherPhrase.vue'
 import { Sun, Moon, Star, Loader, MapPin, Search } from 'lucide-vue-next'
 
 const store = useWeatherStore()
@@ -109,6 +110,9 @@ onMounted(() => handleLocate())
     <WeatherSkeleton v-if="store.weatherLoading" />
     <ErrorMessage v-else-if="store.weatherError" :message="store.weatherError" />
     <WeatherCard v-else-if="store.weather" :weather="store.weather" />
+
+    <!-- Frase salvadoreña -->
+    <WeatherPhrase v-if="store.weather" :condition="store.weather.conditionMain" :temp="store.weather.temp" />
 
     <!-- AQI -->
     <AirQualityBadge v-if="store.airQuality" :data="store.airQuality" />
