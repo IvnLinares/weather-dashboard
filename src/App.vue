@@ -7,6 +7,7 @@ import WeatherSkeleton from '@/components/WeatherSkeleton.vue'
 import ForecastList from '@/components/ForecastList.vue'
 import ForecastSkeleton from '@/components/ForecastSkeleton.vue'
 import ErrorMessage from '@/components/ErrorMessage.vue'
+import TemperatureChart from '@/components/TemperatureChart.vue'
 
 const { weather, loading: weatherLoading, error: weatherError, fetchByCity } = useWeather()
 const { forecast, loading: forecastLoading, fetchForecastByCity } = useForecast()
@@ -43,6 +44,9 @@ function handleSearch(city: string) {
       <!-- Pronóstico 5 días -->
       <ForecastSkeleton v-if="forecastLoading" />
       <ForecastList v-else-if="forecast.length" :days="forecast" />
+
+      <!-- Gráfico temperatura 24h -->
+      <TemperatureChart v-if="forecast.length && !forecastLoading" :days="forecast" />
 
       <!-- Pantalla vacía -->
       <div
